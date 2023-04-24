@@ -1,4 +1,6 @@
 .~lock.techtask.odt#
 task.odt
 .vscode
-.gitignore
+**/test
+**/test.c
+/tests

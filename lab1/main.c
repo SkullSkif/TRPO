@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #define maxvalue 100
 #define maxstr 255
 
@@ -17,12 +18,15 @@ struct Circle
     char string[maxstr];
     double rad;
     point* coord;
+    double perimeter;
+    double area;
+    int* intersects;
 };
 typedef struct Circle circle;
 
 void checkFile(FILE* data)
 {
-    if (data ==NULL)
+    if (data == NULL)
     {
     printf("Файл с входными данными не обнаружен.\n");
     exit(1);
@@ -193,7 +197,7 @@ void checkPointRad(char* strObject,int* pos, circle* Object,int strcount)
 
 void checkError(char* strObject,int* pos, circle* Object, int strcount)
 {
-    Object->coord = (point*)malloc(sizeof(point));
+    //Object->coord = (point*)malloc(sizeof(point));
     checkName(strObject, pos,strcount);
     checkColumn(strObject,pos,strcount);
     checkPointX(strObject,pos, Object,strcount);
@@ -210,6 +214,8 @@ void getObjects(FILE* data, int lines_count, circle* Objects)
     for (int i=0;i<lines_count;i++)
     {    
         fgets(strObject,maxstr,data); // считываю строку с файла    
+        Objects[i].coord = (point*)malloc(sizeof(point));
+        Objects[i].intersects = (int*)malloc(lines_count * sizeof(int));
         pos = 0;
         checkError(strObject,&pos, &Objects[i],strcount);
         strcpy(Objects[i].string, strObject);
@@ -218,6 +224,56 @@ void getObjects(FILE* data, int lines_count, circle* Objects)
 
 }
 
+void getParametrs(circle* Objects,int lines_count)
+{
+    // FILE* out;
+    // out = fopen("output.txt","w+t");
+    double d = 0;
+    for (int i = 0;i<lines_count;i++)
+        {
+            for (int j = lines_count-1;j>i;j--)
+                {
+                    d = sqrt(pow(((Objects[j].coord->x)-(Objects[i].coord->x)),2)+pow(((Objects[j].coord->y)-(Objects[i].coord->y)),2)); 
+                    Objects[i].intersects[j] = 1;
+                    if (d>(Objects[i].rad+Objects[j].rad))
+                        Objects[i].intersects[j] = 0;
+                    if (d<abs(Objects[i].rad-Objects[j].rad))
+                        Objects[i].intersects[j] = 1;
+                    if (Objects[i].intersects[j] == 1)
+                        Objects[j].intersects[i] = 1;
+                    // if (!(d>(Objects[i].rad+Objects[j].rad)) || !(d<abs(Objects[i].rad-Objects[j].rad)))
+                    // {
+                    //     Objects[i].intersects[j] = 1;
+                    // }
+                    //     else {Objects[i].intersects[j] = 0;}
+                }
+        }
+    for (int i = 0;i<lines_count;i++)
+        {
+            Objects[i].perimeter = 2 * 3.14 * Objects[i].rad;
+            Objects[i].area = 3.14 * pow(Objects[i].rad,2);
+        }
+}
+
+void writeOutput(circle* Objects,int lines_count)
+{
+    FILE* out;
+    out = fopen("output.txt","w+t");
+    for (int i = 0;i<=lines_count-1;i++)
+        {
+            fprintf(out,"%d. %s",i+1,Objects[i].string);
+            if (i==lines_count-1)
+                fprintf(out,"\n");
+            fprintf(out,"\tperimeter = %.4f\n\tarea = %.4f\n\tintersects:\n",Objects[i].perimeter,Objects[i].area);
+                for (int j = 0;j<lines_count;j++)
+                    {
+                        if (Objects[i].intersects[j])
+                            fprintf(out,"\t\t%d. circle\n",j+1);
+                    }
+            fprintf(out,"\n");
+        }
+
+}
 
 int main()
 {
@@ -230,7 +286,9 @@ int main()
     lines_count = objectsCount(filename);
     circle* Objects = (circle*) malloc(lines_count * sizeof(circle));
     getObjects(data,lines_count, Objects);
-    
+    getParametrs(Objects,lines_count);
+    writeOutput(Objects,lines_count);
+    //printf("\nS: %s  X: %d,  Y: %d  Rad: %.2f\n",Objects[2].string,Objects[2].coord->x,Objects[2].coord->y,Objects[2].rad);
     
     free(Objects);
     fclose(data);

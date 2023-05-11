@@ -226,8 +226,6 @@ void getObjects(FILE* data, int lines_count, circle* Objects)
 
 void getParametrs(circle* Objects,int lines_count)
 {
-    // FILE* out;
-    // out = fopen("output.txt","w+t");
     double d = 0;
     for (int i = 0;i<lines_count;i++)
         {
@@ -241,11 +239,6 @@ void getParametrs(circle* Objects,int lines_count)
                         Objects[i].intersects[j] = 1;
                     if (Objects[i].intersects[j] == 1)
                         Objects[j].intersects[i] = 1;
-                    // if (!(d>(Objects[i].rad+Objects[j].rad)) || !(d<abs(Objects[i].rad-Objects[j].rad)))
-                    // {
-                    //     Objects[i].intersects[j] = 1;
-                    // }
-                    //     else {Objects[i].intersects[j] = 0;}
                 }
         }
     for (int i = 0;i<lines_count;i++)
@@ -272,7 +265,6 @@ void writeOutput(circle* Objects,int lines_count)
                     }
             fprintf(out,"\n");
         }
-
 }
 
 int main()
@@ -288,7 +280,6 @@ int main()
     getObjects(data,lines_count, Objects);
     getParametrs(Objects,lines_count);
     writeOutput(Objects,lines_count);
-    //printf("\nS: %s  X: %d,  Y: %d  Rad: %.2f\n",Objects[2].string,Objects[2].coord->x,Objects[2].coord->y,Objects[2].rad);
     
     free(Objects);
     fclose(data);

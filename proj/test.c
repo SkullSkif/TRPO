@@ -1,47 +1,78 @@
-#include <ctype.h>
 #include <stdio.h>
-#include <string.h>
-#include <locale.h>
-struct heap
-{
-    char name;
-    int count;
-};
-typedef struct heap heap;
+#include <stdlib.h>
+#define x 90
+#define y 35
+#define middle ((int)x / 3)
+#define indent 6
+#define width 5
 
-void print_heap()
+void mainmenu()
 {
-    FILE *file;
-    file = fopen("text.txt", "r");
-    char str1[100];
-    int numberheap = 0;
-    char slash = '\n';
-    while (fgets(str1, 99, file))
+    char interface[y][x];
+    int i;
+    // Окно игры
+    for (i = 0; i < y; i++)
+        for (int j = 0; j < x; j++)
+            interface[i][j] = ' ';
+    for (i = 0; i < y; i++) {
+        interface[i][0] = '#';
+        interface[i][x - 1] = '#';
+    }
+    for (i = 0; i < x; i++) {
+        interface[0][i] = '#';
+        interface[y - 1][i] = '#';
+    }
+
+    // Буквы с названием игры
+    for (i = 3; i < 8; i++) {
+        interface[i][middle] = '#';
+        interface[i][middle + width] = '#';
+        interface[i][middle + width + indent] = '#';
+        interface[i][middle + width + indent + width] = '#';
+        interface[i][middle + width + indent + width + indent] = '#';
+        interface[i][middle + width + indent + width + indent + width + 1]
+                = '#';
+    }
+
+    for (i = middle + 1; i < middle + width; i++)
+        interface[5][i] = '#';
+
+    interface[6][middle + width + indent + 1] = '#';
+    interface[5][middle + width + indent + 2] = '#';
+    interface[4][middle + width + indent + 3] = '#';
+
+    interface[3][middle + width + indent + width + indent + 1] = '#';
+    interface[4][middle + width + indent + width + indent + 2] = '#';
+    interface[5][middle + width + indent + width + indent + 3] = '#';
+    interface[4][middle + width + indent + width + indent + 4] = '#';
+    interface[3][middle + width + indent + width + indent + 5] = '#';
+    //  for (i = 3;i<8;i++)
+    //      {
+    //          interface[i][27] = '#';
+    //          interface[i][32] = '#';
+    //      }
+    // interface[4][21] = '#';
+    // interface[5][22] = '#';
+    // interface[6][23] = '#';
+
+    // interface[3][26] = '#';
+    // for (int i = 5;i<8;i++)
+    //     interface[i][26] = '#';
+    key=getch();
+    While (key!='q')
     {
-        numberheap++;
-        for (int i = 0; i < strlen(str1); i++)
-        {
-            if (str1[i] == slash)
-            {
-                str1[i] = str1[i + 1];
-                break;
-            }
-        }
-        if (numberheap == 1)
-        {
-            printf("| %s |", str1);
-        }
-        else
-        {
-            printf(" %s |", str1);
+        system('clear');
+        for (int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++)
+                printf("%c", interface[i][j]);
+            printf("\n");
         }
     }
-    printf("\n");
-    fclose(file);
 }
 
 int main()
 {
-    print_heap();
+    mainmenu();
+
     return 0;
 }

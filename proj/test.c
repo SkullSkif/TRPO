@@ -10,6 +10,10 @@ void mainmenu()
 {
     char interface[y][x];
     int i;
+    unsigned char key = ' ';
+    while (key!='q')
+    {
+    system("clear");
     // Окно игры
     for (i = 0; i < y; i++)
         for (int j = 0; j < x; j++)
@@ -58,21 +62,20 @@ void mainmenu()
     // interface[3][26] = '#';
     // for (int i = 5;i<8;i++)
     //     interface[i][26] = '#';
-    key=getch();
-    While (key!='q')
-    {
-        system('clear');
+    // key=getch();
+        
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++)
                 printf("%c", interface[i][j]);
             printf("\n");
         }
+    key=getchar();
     }
 }
 
 int main()
 {
     mainmenu();
-
+    system("clear");
     return 0;
 }

@@ -1,2 +1,2 @@
 all:
-	gcc -Wall -g3 -o a test.c
+	gcc -Wall -Wextra -O0 -g3 main.c
